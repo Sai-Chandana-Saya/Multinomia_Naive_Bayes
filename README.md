@@ -14,32 +14,24 @@ This repository contains the implementation of a **Multinomial Naive Bayes (MNB)
 ## **1. Multinomial Naive Bayes (MNB) Classifier**  
 
 ### **Algorithm**  
-1. **Count Vectorization**  
-   - Convert text into a sparse matrix of word counts (top 10,000 frequent words).  
-   -  **TF-IDF** feature representation:  
-     \[
-     \text{TF-IDF}(w,d) = \text{TF}(w,d) \times \text{IDF}(w)
-     \]
-     where:  
-     - \(\text{TF}(w,d)\) = Term frequency in document \(d\).  
-     - \(\text{IDF}(w)\) = Inverse document frequency.  
 
-2. **Training**  
-   - Compute **class priors** \(P(c)\):  
-     \[
-     P(c) = \frac{\text{Number of documents in class } c}{\text{Total documents}}
-     \]
-   - Compute **smoothed class-conditional probabilities** \(P(w \mid c)\):  
-     \[
-     P(w \mid c) = \frac{\text{count}(w,c) + \alpha}{\text{total count}(c) + \alpha \times \text{vocab size}}
-     \]  
-     (Laplace smoothing with \(\alpha = 0.1\))  
+#### **1. Count Vectorization**  
+- Convert text into a sparse matrix of word counts (top 10,000 frequent words).  
+- Optional **TF-IDF** feature representation:  
+  - `TF-IDF(w,d) = TF(w,d) × IDF(w)`  
+    - `TF(w,d)` = Term frequency (count of word `w` in document `d` / total words in `d`).  
+    - `IDF(w)` = log(Total documents / Number of documents containing `w`).  
 
-3. **Inference**  
-   - Predict class using **log posterior probabilities**:  
-     \[
-     \log P(c \mid d) = \log P(c) + \sum_{w \in d} \text{count}(w,d) \cdot \log P(w \mid c)
-     \]  
+#### **2. Training**  
+- **Class Priors `P(c)`**:  
+  - `P(c) = (Number of documents in class c) / (Total documents)`  
+- **Smoothed Conditional Probabilities `P(w|c)`**:  
+  - `P(w|c) = [count(w,c) + α] / [total count(c) + α × vocab size]`  
+    - Laplace smoothing (`α = 0.1`) avoids zero probabilities.  
+
+#### **3. Inference**  
+- Predict class using **log posterior probabilities**:  
+  - `log P(c|d) = log P(c) + Σ [count(w,d) × log P(w|c)]`  
 
 ### **Assumptions**  
 - **Conditional independence** of words given the class.  
